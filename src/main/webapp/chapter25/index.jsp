@@ -21,7 +21,7 @@
 
 <div class="wrapper">
     <h2 class="heading-large">寿司オンラインショッピングにようこそ！</h2>
-<!--     20250117_1544 -->
+<!--     20250117_1626 -->
 </div>
 
 <%@include file="../footer.jsp" %>
