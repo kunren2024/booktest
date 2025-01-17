@@ -1,14 +1,8 @@
-
 <%@page contentType="text/html; charset=UTF-8" %>
 <%@taglib prefix="c" uri="jakarta.tags.core" %>
-<%-- <%@include file="../header.jsp" %> --%>
+<%@include file="../header.jsp" %>
 <%@include file="menu.jsp" %>
 
-<!DOCTYPE html>
-<html lang="ja">
-<head>
-    <meta charset="UTF-8">
-    <title>購入確定</title>
     <style>
         /* 全体のラッパー */
         .wrapper {
@@ -131,7 +125,7 @@
             background-color: #218838;
         }
 
-        /* エラーメッセージのスタイル */
+        /* エラーメッセージのスタイル（追加） */
         .error-message {
             color: red;
             margin-bottom: 1rem;
@@ -202,67 +196,45 @@
             }
         }
     </style>
-
-</head>
 <body>
     <div class="wrapper">
         <h2 class="heading-large">購入確定</h2>
 
-        <!-- 合計金額と合計個数の計算 -->
-        <c:set var="totalQuantity" value="0" />
-        <c:set var="totalAmount" value="0" />
+        <div class="cart-info">
+            ${cart.size()}種類の商品があります。
+        </div>
 
-        <c:forEach var="item" items="${cart}">
-            <c:set var="totalQuantity" value="${totalQuantity + item.count}" />
-            <c:set var="totalAmount" value="${totalAmount + (item.product.price * item.count)}" />
-        </c:forEach>
-
-        <c:choose>
-            <c:when test="${not empty cart and cart.size() > 0}">
-                <div class="cart-info">
-                    ${cart.size()}種類の商品があります。<br/>
-                    合計: ${totalAmount}円 (${totalQuantity}個)
+        <div class="cart-table">
+            <c:forEach var="item" items="${cart}">
+                <div class="cart-item">
+                    <img src="image/${item.product.name}.jpg" alt="商品画像${item.product.name}">
+                    <h3>商品${item.product.id}: ${item.product.name}<br>${product.area}</h3>
+                    <p>価格: ${item.product.price}円</p>
+                    <p class="quantity">数量: ${item.count}個</p>
                 </div>
-                <div class="cart-table">
-                    <c:forEach var="item" items="${cart}">
-                        <div class="cart-item">
-		                    <img src="image/${item.product.name}.jpg" alt="商品画像${item.product.name}">
-		                    <h3>商品${item.product.id}: ${item.product.name}<br>${product.area}</h3>
-		                    <p>価格: ${item.product.price}円</p>
-		                    <p class="quantity">数量: ${item.count}個</p>
-                        </div>
-                    </c:forEach>
-                </div>
+            </c:forEach>
+        </div>
 
-                <!-- 購入フォームの表示 -->
-                <div class="purchase-form">
-                    <!-- エラーメッセージ表示エリア -->
-                    <div id="error-message" class="error-message"></div>
-                    <form id="purchase-form" action="Purchase.action" method="post" novalidate>
-                        <label for="name">お名前</label>
-                        <input type="text" id="name" name="name" placeholder="お名前を入力" required maxlength="15">
+        <div class="purchase-form">
+            <!-- エラーメッセージ表示エリア -->
+            <div id="error-message" class="error-message"></div>
+            <form id="purchase-form" action="Purchase.action" method="post" novalidate>
+                <label for="name">お名前</label>
+                <input type="text" id="name" name="name" placeholder="お名前を入力" required maxlength="15">
 
-                        <label for="address">ご住所</label>
-                        <input type="text" id="address" name="address" placeholder="ご住所を入力" required maxlength="30">
+                <label for="address">ご住所</label>
+                <input type="text" id="address" name="address" placeholder="ご住所を入力" required maxlength="30">
 
-                        <input type="submit" value="購入を確定">
-                    </form>
-                </div>
-            </c:when>
-            <c:otherwise>
-                <div class="empty-cart">
-                    <p>カートに商品がありません。</p>
-                </div>
-            </c:otherwise>
-        </c:choose>
+                <input type="hidden" name="data" value="${date}">
+
+                <input type="submit" value="購入を確定">
+            </form>
+        </div>
     </div>
 
-<%--     <%@include file="../footer.jsp" %> --%>
     <!-- Validator.js ライブラリの追加 -->
-    <script src="https://cdn.jsdelivr.net/npm/validator@13.9.0/validator.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/validator@13.9.0/validator.min.js"></script>
     <script>
-        // ページ読み込み後に実行
-        document.addEventListener('DOMContentLoaded', function() {
             const form = document.getElementById('purchase-form');
             const errorElement = document.getElementById('error-message');
 
@@ -310,7 +282,5 @@
                 return errors.length === 0;
             });
     </script>
-</body>
-</html>
-
+<%@include file="../footer.jsp" %>
 
